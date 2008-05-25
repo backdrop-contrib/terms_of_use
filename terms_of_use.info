@@ -1,6 +1,4 @@
 ; $Id$
-
 name = Terms of Use
-description = Adds terms of Use to the registeration form.
+description = Adds terms of Use to the registration page.
 core = 6.x
-
