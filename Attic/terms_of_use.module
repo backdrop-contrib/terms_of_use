@@ -22,26 +22,65 @@ function terms_of_use_menu() {
     'access arguments' => array('administer site configuration'),
   );
 
+  $items['node/autocomplete'] = array(
+    'title' => 'Autocomplete node title',
+    'page callback' => 'terms_of_use_autocomplete',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'terms_of_use.pages.inc',
+  );
+  
+  $items['terms_of_use/js'] = array(
+    'page callback' => 'terms_of_use_js',
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_CALLBACK,
+    'file' => 'terms_of_use.pages.inc',
+  );
+  
   return $items;
 }
 
 /**
  * Menu callback; show settings form.
+ * @see terms_of_use_admin_settings_validate()
+ *
  */
 function terms_of_use_admin_settings() {
-  $form['terms_of_use_node'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Node id where your Terms of Use are published'),
-    '#default_value' => variable_get('terms_of_use_node', ''),
-    '#description' => t('Node <em>id</em> of the page or story (or blog entry or book page) where your Terms of Use are published.'),
+  
+  // Adding the fieldset for node specification.
+  $form['terms_of_use_text'] = array(
+    '#type' => 'fieldset',
+    '#prefix' => '<div id="fieldset-wrapper">',
+    '#suffix' => '</div>',
+    '#title' => t('Terms of Use text'),
   );
-  $form['terms_of_use_fieldset_name'] = array(
+  $form['terms_of_use_text']['terms_of_use_node_title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title of the post where your Terms of Use are published'),
+    '#default_value' => variable_get('terms_of_use_node_title', ''),
+    '#description' => t('Node <em>title</em> of the page or story (or blog entry or book page) where your Terms of Use are published.'),
+    '#autocomplete_path' => 'node/autocomplete',
+  );
+  $form['terms_of_use_text']['terms_of_use_pick_node_id'] = array(
+    '#type' => 'button',
+    '#value' => t('I prefer to specify the node id'),
+    '#ahah' => array(
+      'path' => 'terms_of_use/js',
+      'wrapper' => 'fieldset-wrapper',
+    ),
+  );
+  // Adding the fieldset for form specification.
+  $form['terms_of_use_form'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Terms of Use form'),
+  );
+  $form['terms_of_use_form']['terms_of_use_fieldset_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Title of the Terms of Use fieldset'),
     '#default_value' => variable_get('terms_of_use_fieldset_name', t('Terms of Use')),
     '#description' => t('The Terms of Use and the [x] I agree checkbox appear inside a fieldset. Type here a title for that fieldset.'),
   );
-  $form['terms_of_use_checkbox_label'] = array(
+  $form['terms_of_use_form']['terms_of_use_checkbox_label'] = array(
     '#type' => 'textfield',
     '#title' => t('Label for the ckeckbox'),
     '#default_value' => variable_get('terms_of_use_checkbox_label', t('I agree with these terms.')),
@@ -49,6 +88,35 @@ function terms_of_use_admin_settings() {
   );
 
   return system_settings_form($form);
+}
+
+/**
+ * Validate the terms_of_use_admin_settings form.
+ *
+ * @see terms_of_use_admin_settings()
+ */
+function terms_of_use_admin_settings_validate($form, &$form_state) {
+  $nid = $form_state['values']['terms_of_use_node_id'];
+  if (isset($nid)) {
+    if (empty($nid)) {
+      form_set_error('terms_of_use_node_id', t('You must specify a node id.'));   
+    }
+    else if(node_load($nid) == FALSE) {
+      form_set_error('terms_of_use_node_id', t('No post was published with <em>nid</em> !nid.', array('!nid' => $nid))); 
+    } 
+  }
+  else if (!empty($form_state['values']['terms_of_use_node_title'])) {
+    $node = node_load(array('title' => $form_state['values']['terms_of_use_node_title']));
+    if ($node == FALSE) {
+      form_set_error('terms_of_use_node_title', t('No post was published with this title.'));
+    }
+    else {
+      variable_set('terms_of_use_node_id', $node->nid);
+    }
+  }
+  else {
+    form_set_error('terms_of_use_node_title', t('You must specify a node title.'));
+  }
 }
 
 /**
@@ -63,7 +131,7 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
   );
 
   // Getting the node that contains the Terms of Use.
-  $node = node_load(variable_get('terms_of_use_node', ''));
+  $node = node_load(variable_get('terms_of_use_node_id', ''));
   if ($node) {
     // Adding the Terms of Use to the fieldset.
     $terms = node_prepare($node)->body;
@@ -100,7 +168,7 @@ function _terms_of_use_validate_checkbox($form, &$form_state) {
 function terms_of_use_theme() {
   return array(
     'terms_of_use' => array(
-      'arguments' => array('terms' => NULL, 'node' => NULL),
+      'arguments' => array('terms' => NULL),
     ),
   );
 }
@@ -110,13 +178,11 @@ function terms_of_use_theme() {
  *
  * @param $terms
  *  The terms of service, already formatted.
- * @param $node
- *  The raw node object, in case it's needed.
  * @return
  *  HTML output.
  * @ingroup themeable
  */
-function theme_terms_of_use($terms, $node) {
+function theme_terms_of_use($terms) {
   $output  = '<div id="terms-of-use" class="content clear-block">';
   $output .= $terms;
   $output .= '</div>';
