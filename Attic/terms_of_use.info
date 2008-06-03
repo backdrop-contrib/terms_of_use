@@ -2,4 +2,3 @@
 name = Terms of Use
 description = Adds terms of Use to the registration page.
 core = 6.x
-php = 5.1
