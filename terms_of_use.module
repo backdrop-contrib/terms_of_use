@@ -99,11 +99,17 @@ function terms_of_use_admin_settings_validate($form, &$form_state) {
   $nid = $form_state['values']['terms_of_use_node_id'];
   if (isset($nid)) {
     if (empty($nid)) {
-      form_set_error('terms_of_use_node_id', t('You must specify a node id.'));   
+      form_set_error('terms_of_use_node_id', t('You must specify a node <em>nid</em>.'));   
     }
-    else if(node_load($nid) == FALSE) {
-      form_set_error('terms_of_use_node_id', t('No post was published with <em>nid</em> !nid.', array('!nid' => $nid))); 
-    } 
+    else {
+      $node = node_load($nid);
+      if ($node == FALSE) {
+        form_set_error('terms_of_use_node_id', t('No post was published with <em>nid</em> !nid.', array('!nid' => $nid))); 
+      }
+      else {
+        variable_set('terms_of_use_node_title', $node->title);
+      }
+    }
   }
   else if (!empty($form_state['values']['terms_of_use_node_title'])) {
     $node = node_load(array('title' => $form_state['values']['terms_of_use_node_title']));

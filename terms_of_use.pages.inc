@@ -15,7 +15,7 @@ function terms_of_use_autocomplete($string = '') {
     $result = db_query_range(db_rewrite_sql("SELECT nr.title FROM {node_revisions} nr WHERE LOWER(nr.title) LIKE LOWER('%%%s%%')"), $string, 0, 10);
 
     while ($node = db_fetch_object($result)) {
-      $matches[$node->title] = check_plain($node->title);
+      $matches[$node->title] = $node->title;
     }
   }
 
