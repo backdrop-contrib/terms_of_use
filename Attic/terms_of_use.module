@@ -64,6 +64,7 @@ function terms_of_use_admin_settings() {
   $form['terms_of_use_text']['terms_of_use_pick_node_id'] = array(
     '#type' => 'button',
     '#value' => t('I prefer to specify the node id'),
+    '#weight' => 10,
     '#ahah' => array(
       'path' => 'terms_of_use/js',
       'wrapper' => 'fieldset-wrapper',
