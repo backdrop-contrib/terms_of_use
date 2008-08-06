@@ -175,7 +175,7 @@ function _terms_of_use_validate_checkbox($form, &$form_state) {
 function terms_of_use_theme() {
   return array(
     'terms_of_use' => array(
-      'arguments' => array('terms' => NULL),
+      'arguments' => array('terms' => NULL, 'node' => NULL),
     ),
   );
 }
@@ -185,11 +185,13 @@ function terms_of_use_theme() {
  *
  * @param $terms
  *  The terms of service, already formatted.
+ * @param $node
+ *  The $node object, in case we need it.
  * @return
  *  HTML output.
  * @ingroup themeable
  */
-function theme_terms_of_use($terms) {
+function theme_terms_of_use($terms, $node = NULL) {
   $output  = '<div id="terms-of-use" class="content clear-block">';
   $output .= $terms;
   $output .= '</div>';
