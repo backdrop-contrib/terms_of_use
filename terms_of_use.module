@@ -152,7 +152,7 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
   $show_terms = TRUE;
   $checkbox_label = check_plain(variable_get('terms_of_use_checkbox_label', t('I agree with these terms.')));
   if (strpos($checkbox_label, '@link') !== FALSE) {
-    $checkbox_label = str_replace('@link', l(check_plain($node->title), 'node/'. $node->nid), $checkbox_label);
+    $checkbox_label = str_replace('@link', l($node->title, 'node/' . $node->nid), $checkbox_label);
     $show_terms = FALSE;
   }  
     
