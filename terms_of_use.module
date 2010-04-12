@@ -164,10 +164,18 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
     );
   }
 
+  // Checkbox validate handles denoting required checkboxes for us
+  if (module_exists('checkbox_validate')) {
+    $asterisk = '';
+  }
+  else {
+    $asterisk = '&nbsp;<span class="form-required" title="' . t('This field is required') . '">*</span>';
+  }
+
   // Adding the checkbox to the fieldset.
   $form['terms_of_use']['I_agree'] = array(
     '#type' => 'checkbox',
-    '#title' => $checkbox_label . '&nbsp;<span class="form-required" title="' . t('This field is required') . '">*</span>',
+    '#title' => $checkbox_label . $asterisk,
     '#required' => TRUE,
     '#element_validate' => array('_terms_of_use_validate_checkbox'),
   );
