@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Terms of Use install file.
+ */
+
+/**
  * Implementation of hook_uninstall().
  */
 function terms_of_use_uninstall() {

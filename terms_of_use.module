@@ -111,7 +111,7 @@ function terms_of_use_admin_settings_validate($form, &$form_state) {
       }
     }
   }
-  else if (!empty($form_state['values']['terms_of_use_node_title'])) {
+  elseif (!empty($form_state['values']['terms_of_use_node_title'])) {
     $node = node_load(array('title' => $form_state['values']['terms_of_use_node_title']));
     if ($node == FALSE) {
       form_set_error('terms_of_use_node_title', t('No post was published with this title.'));
