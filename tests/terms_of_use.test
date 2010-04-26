@@ -1,0 +1,45 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Terms of use module functionality tests.
+ */
+
+/**
+ * Base class for all terms od use web test cases.
+ */
+class TOUWebTestCase extends DrupalWebTestCase {
+
+  protected $admin_user;
+  protected $node;
+
+  public function setUp() {
+    // Enable the terms of use module.
+    parent::setUp();
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($this->admin_user);
+
+    // Default terms of use node.
+    $this->node = $this->drupalCreateNode(array('type' => 'page'));
+
+  }
+}
+
+/**
+ * Test for all simple settings.
+ */
+class TOUSettingsTestCase extends TOUWebTestCase {
+
+  public static function getInfo() {
+    return array(
+    'name' => 'TOU Basic',
+    'description' => 'Basic settings tests.',
+    'group' => 'Terms of use',
+    );
+  }
+
+  public function testTOUSettings() {
+    $this->drupalGet('node/' . $this->node->nid);
+  }
+}
