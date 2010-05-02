@@ -96,8 +96,8 @@ function terms_of_use_admin_settings() {
  * @see terms_of_use_admin_settings()
  */
 function terms_of_use_admin_settings_validate($form, &$form_state) {
-  $nid = $form_state['values']['terms_of_use_node_id'];
-  if (isset($nid)) {
+  if (isset($form_state['values']['terms_of_use_node_id'])) {
+    $nid = $form_state['values']['terms_of_use_node_id'];
     if (empty($nid)) {
       form_set_error('terms_of_use_node_id', t('You must specify a node <em>nid</em>.'));
     }
