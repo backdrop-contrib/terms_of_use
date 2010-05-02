@@ -144,7 +144,6 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
     '#weight' => 10,
   );
 
-
   $show_terms = TRUE;
 
   // Getting the nid of the the Terms of Use node.
@@ -164,17 +163,16 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
     $show_terms = FALSE;
   }
 
-  // Will we show the full text of the Terms or only provide a link to the
-  // terms page. Parsing the checkbox label to find out.
-  if (strpos($checkbox_label, '@link') !== FALSE) {
-    $checkbox_label = str_replace('@link', l($node->title, 'node/' . $node->nid), $checkbox_label);
-    $show_terms = FALSE;
-  }
-
   // Adding the Terms of Use to the fieldset.
   if ($show_terms) {
     $node = node_load($terms_of_use_node_id);
     if ($node->nid) {
+      // Will we show the full text of the Terms or only provide a link to the
+      // terms page. Parsing the checkbox label to find out.
+      if (strpos($checkbox_label, '@link') !== FALSE) {
+        $checkbox_label = str_replace('@link', l($node->title, 'node/' . $node->nid), $checkbox_label);
+        $show_terms = FALSE;
+      }
       $node = node_prepare(node_load($terms_of_use_node_id));
       if ($node->body) {
         $form['terms_of_use']['terms_of_use_text'] = array(
@@ -199,7 +197,7 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
   }
 
   // Adding the checkbox to the fieldset.
-  $form['terms_of_use']['I_agree'] = array(
+  $form['terms_of_use']['terms_of_use'] = array(
     '#type' => 'checkbox',
     '#title' => $checkbox_label . $asterisk,
     '#required' => TRUE,
@@ -213,12 +211,11 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
  * Validation callback; verify that checkbox is checked.
  */
 function _terms_of_use_validate_checkbox($form, &$form_state) {
-  $value = $form_state['values']['I_agree'];
+  $value = $form_state['values']['terms_of_use'];
   if ($value == 0) {
-    form_set_error('I_agree', t('You must agree with the !terms to get an account.', array('!terms' => check_plain(tou_tt('fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')))))));
+    form_set_error('terms_of_use', t('You must agree with the !terms to get an account.', array('!terms' => check_plain(tou_tt('fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')))))));
   }
 }
-
 
 /**
  * Implementation of hook_theme().
