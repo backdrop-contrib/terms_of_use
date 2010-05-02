@@ -159,8 +159,8 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
     }
   }
 
-  if(!$terms_of_use_node_id) {
-    watchdog('Terms of use','No node is set to use as terms of use.', array(), WATCHDOG_NOTICE, l('Administer terms of use', 'admin/settings/terms_of_use'));
+  if (!$terms_of_use_node_id) {
+    watchdog('Terms of use', 'No node is set to use as terms of use.', array(), WATCHDOG_NOTICE, l('Administer terms of use', 'admin/settings/terms_of_use'));
     $show_terms = FALSE;
   }
 
@@ -174,19 +174,19 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
   // Adding the Terms of Use to the fieldset.
   if ($show_terms) {
     $node = node_load($terms_of_use_node_id);
-    if($node->nid) {
+    if ($node->nid) {
       $node = node_prepare(node_load($terms_of_use_node_id));
-      if($node->body) {
+      if ($node->body) {
         $form['terms_of_use']['terms_of_use_text'] = array(
           '#value' => theme('terms_of_use', $node->body, $node),
         );
       }
       else {
-        watchdog('Terms of use','The body field of the terms of use node was empty. Please check the the nodes content.', array(), WATCHDOG_ALERT, l('Administer terms of use', 'admin/settings/terms_of_use'));
+        watchdog('Terms of use', 'The body field of the terms of use node was empty. Please check the the nodes content.', array(), WATCHDOG_ALERT, l('Administer terms of use', 'admin/settings/terms_of_use'));
       }
     }
     else {
-      watchdog('Terms of use','The terms of use node could not be loaded. Please check the settings and the node.', array(), WATCHDOG_ALERT, l('Administer terms of use', 'admin/settings/terms_of_use'));
+      watchdog('Terms of use', 'The terms of use node could not be loaded. Please check the settings and the node.', array(), WATCHDOG_ALERT, l('Administer terms of use', 'admin/settings/terms_of_use'));
     }
   }
 
@@ -258,7 +258,7 @@ function terms_of_use_locale($op = 'groups', $group = NULL) {
     case 'groups':
       return array('terms_of_use' => t('Terms of Use'));
     case 'refresh':
-      if(module_exists('i18nstrings')) {
+      if (module_exists('i18nstrings')) {
         tou_tt('fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')), NULL, TRUE);
         tou_tt('checkbox_label', variable_get('terms_of_use_checkbox_label', t('I agree with these terms.')), NULL, TRUE);
       }
@@ -266,8 +266,8 @@ function terms_of_use_locale($op = 'groups', $group = NULL) {
 }
 
 /**
-* Wrapper function for tt() if i18nstrings enabled.
-*/
+ * Wrapper function for tt() if i18nstrings enabled.
+ */
 function tou_tt($name, $string, $langcode = NULL, $update = FALSE) {
   if (module_exists('i18nstrings')) {
     return tt('terms_of_use:tou:' . $name, $string, $langcode, $update);
