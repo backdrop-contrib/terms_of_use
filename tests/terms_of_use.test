@@ -21,11 +21,9 @@ class TOUWebTestCase extends DrupalWebTestCase {
 
   public function setUp() {
     // String for XSS Test.
-    $this->xss = '<script>alert("XSS Test");</script>';
-
-    $this->lable = $this->randomString() . $this->xss;
-    $this->lable_link = $this->randomString() . $this->xss . ' @link ' . $this->randomString();
-    $this->fieldset = $this->randomString() . $this->xss;
+    $this->lable = $this->testString();
+    $this->lable_link = $this->testString() . ' @link ';
+    $this->fieldset = $this->testString();
     $this->body = $this->randomName();
 
 // Enable the terms of use module.
@@ -36,6 +34,10 @@ class TOUWebTestCase extends DrupalWebTestCase {
 
     // Default terms of use node.
     $this->node = $this->drupalCreateNode(array('type' => 'page', 'body' => $this->body));
+  }
+
+  private function testString() {
+    return '<a href="">' . $this->randomString() . '</a><script>alert("' . $this->randomString() . '");</script>';
   }
 }
 
@@ -65,13 +67,13 @@ class TOUSettingsTestCase extends TOUWebTestCase {
 
     $this->drupalLogout();
     $this->drupalGet('user/register');
-    $this->assertText(check_plain($this->lable), 'Checkbox lable found.');
-    $this->assertText(check_plain($this->fieldset), 'Fieldset name found.');
+    $this->assertRaw(filter_xss_admin($this->lable), 'Checkbox lable found.');
+    $this->assertRaw(filter_xss($this->fieldset), 'Fieldset name found.');
     $this->assertText($this->body, 'Terms node body text found.');
 
 
     $this->drupalPost('user/register', array(), t('Create new account'));
-    $this->assertText(t('You must agree with the !terms to get an account.', array('!terms' => check_plain($this->fieldset))), 'Checkbox lable found.');
+    $this->assertRaw(t('You must agree with the !terms to get an account.', array('!terms' => filter_xss($this->fieldset))), 'Checkbox lable found.');
 
     $edit = array(
       'name' => $this->randomName(),
@@ -92,7 +94,7 @@ class TOUSettingsTestCase extends TOUWebTestCase {
     $this->drupalLogout();
     $this->drupalGet('user/register');
 
-    $replaced_lable = str_replace('@link', l($this->node->title, 'node/' . $this->node->nid), check_plain($this->lable_link));
+    $replaced_lable = str_replace('@link', l($this->node->title, 'node/' . $this->node->nid), filter_xss_admin($this->lable_link));
     $this->assertRaw($replaced_lable, 'Checkbox lable found.');
 
   }
