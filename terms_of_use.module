@@ -135,8 +135,16 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
     return;
   }
 
-  $fieldset_name = filter_xss(tou_tt('fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use'))));
-  $checkbox_label = filter_xss_admin(tou_tt('checkbox_label', variable_get('terms_of_use_checkbox_label', t('I agree with these terms.'))));
+  $fieldset_name = filter_xss(tou_i18nstrings(
+          'fieldset_name',
+          variable_get('terms_of_use_fieldset_name',
+          t('Terms of Use'))
+  ));
+  $checkbox_label = filter_xss_admin(tou_i18nstrings(
+          'checkbox_label',
+          variable_get('terms_of_use_checkbox_label',
+          t('I agree with these terms.'))
+  ));
 
   // Adding the fieldset.
   $form['terms_of_use'] = array(
@@ -255,20 +263,27 @@ function terms_of_use_locale($op = 'groups', $group = NULL) {
   switch ($op) {
     case 'groups':
       return array('terms_of_use' => t('Terms of Use'));
-    case 'refresh':
-      if (module_exists('i18nstrings')) {
-        tou_tt('fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')), NULL, TRUE);
-        tou_tt('checkbox_label', variable_get('terms_of_use_checkbox_label', t('I agree with these terms.')), NULL, TRUE);
-      }
+    case 'info':
+      $info['terms_of_use']['refresh callback'] = 'terms_of_use_locale_refresh';
+      $info['terms_of_use']['format'] = FALSE;
+      return $info;
+  }
+}
+
+function terms_of_use_locale_refresh() {
+  if (module_exists('i18nstrings')) {
+    i18nstrings_update('terms_of_use:tou:fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')));
+    i18nstrings_update('terms_of_use:tou:checkbox_label', variable_get('terms_of_use_checkbox_label', t('I agree with these terms.')));
+    return TRUE;
   }
 }
 
 /**
  * Wrapper function for tt() if i18nstrings enabled.
  */
-function tou_tt($name, $string, $langcode = NULL, $update = FALSE) {
+function tou_i18nstrings($name, $string, $langcode = NULL) {
   if (module_exists('i18nstrings')) {
-    return tt('terms_of_use:tou:' . $name, $string, $langcode, $update);
+    return i18nstrings('terms_of_use:tou:' . $name, $string, $langcode);
   }
   else {
     return $string;
