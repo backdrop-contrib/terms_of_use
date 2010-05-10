@@ -184,6 +184,7 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
       }
       $node = node_prepare(node_load($terms_of_use_node_id));
       if ($node->body) {
+        drupal_add_css(drupal_get_path('module', 'terms_of_use') . '/terms_of_use.css');
         $form['terms_of_use']['terms_of_use_text'] = array(
           '#value' => theme('terms_of_use', $node->body, $node),
         );
@@ -271,11 +272,9 @@ function terms_of_use_locale($op = 'groups', $group = NULL) {
 }
 
 function terms_of_use_locale_refresh() {
-  if (module_exists('i18nstrings')) {
-    i18nstrings_update('terms_of_use:tou:fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')));
-    i18nstrings_update('terms_of_use:tou:checkbox_label', variable_get('terms_of_use_checkbox_label', t('I agree with these terms.')));
-    return TRUE;
-  }
+  i18nstrings_update('terms_of_use:tou:fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')));
+  i18nstrings_update('terms_of_use:tou:checkbox_label', variable_get('terms_of_use_checkbox_label', t('I agree with these terms.')));
+  return TRUE;
 }
 
 /**
