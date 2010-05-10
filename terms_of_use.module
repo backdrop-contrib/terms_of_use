@@ -223,7 +223,7 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
 function _terms_of_use_validate_checkbox($form, &$form_state) {
   $value = $form_state['values']['terms_of_use'];
   if ($value == 0) {
-    form_set_error('terms_of_use', t('You must agree with the !terms to get an account.', array('!terms' => filter_xss(tou_tt('fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')))))));
+    form_set_error('terms_of_use', t('You must agree with the !terms to get an account.', array('!terms' => filter_xss(tou_i18nstrings('fieldset_name', variable_get('terms_of_use_fieldset_name', t('Terms of Use')))))));
   }
 }
 
