@@ -136,14 +136,12 @@ function terms_of_use_form_user_register_alter(&$form, $form_state) {
   }
 
   $fieldset_name = filter_xss(tou_i18nstrings(
-          'fieldset_name',
-          variable_get('terms_of_use_fieldset_name',
-          t('Terms of Use'))
+    'fieldset_name',
+    variable_get('terms_of_use_fieldset_name', t('Terms of Use'))
   ));
   $checkbox_label = filter_xss_admin(tou_i18nstrings(
-          'checkbox_label',
-          variable_get('terms_of_use_checkbox_label',
-          t('I agree with these terms.'))
+    'checkbox_label',
+    variable_get('terms_of_use_checkbox_label', t('I agree with these terms.'))
   ));
 
   // Adding the fieldset.
