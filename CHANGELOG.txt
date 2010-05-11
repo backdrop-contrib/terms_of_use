@@ -1,5 +1,10 @@
 // $Id$
 
+May 11, 2010
+--------------------
+Releasing new version 6.x-1.11
+Adding CHANGELOG.txt
+
 May 10, 2010
 --------------------
 Minor codingstyle change.
