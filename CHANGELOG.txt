@@ -1,5 +1,10 @@
 // $Id$
 
+May 15, 2010
+--------------------
+Releasing new version 6.x-1.12
+#797200 by nyleve101: Fixed When supplying a terms page link, we now show the entire terms on the page.
+
 May 11, 2010
 --------------------
 Releasing new version 6.x-1.11

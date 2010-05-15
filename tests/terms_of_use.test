@@ -37,7 +37,7 @@ class TOUWebTestCase extends DrupalWebTestCase {
   }
 
   private function testString() {
-    return '<a href="">' . $this->randomString() . '</a><script>alert("' . $this->randomString() . '");</script>';
+    return '<a href="/' . $this->randomString() . '">' . $this->randomString() . '</a><script>alert("' . $this->randomString() . '");</script>';
   }
 }
 
@@ -96,6 +96,6 @@ class TOUSettingsTestCase extends TOUWebTestCase {
 
     $replaced_lable = str_replace('@link', l($this->node->title, 'node/' . $this->node->nid), filter_xss_admin($this->lable_link));
     $this->assertRaw($replaced_lable, 'Checkbox lable found.');
-
+    $this->assertNoText($this->body, 'Terms node body text not found.');
   }
 }
