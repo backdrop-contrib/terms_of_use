@@ -12,6 +12,7 @@
 function terms_of_use_autocomplete($string = '') {
   $matches = array();
   if ($string != '') {
+    // @todo Change this to db_tng.
     $result = db_query_range(db_rewrite_sql("SELECT n.title FROM {node} AS n WHERE n.title LIKE '%%%s%%'"), $string, 0, 10);
 
     while ($node = db_fetch_object($result)) {

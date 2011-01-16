@@ -50,7 +50,7 @@ function terms_of_use_admin_settings() {
   $form['terms_of_use_form']['terms_of_use_checkbox_label'] = array(
     '#type' => 'textfield',
     '#title' => t('Label for the checkbox'),
-    '#default_value' => variable_get('terms_of_use_checkbox_label', t('I agree with these terms.')),
+    '#default_value' => variable_get('terms_of_use_checkbox_label', t('I agree with these terms')),
     '#description' => t('Type here something like "I agree with these terms." or "I CERTIFY THAT I AM OVER THE AGE OF 18 YEARS OLD.", without quotes. You can use the token @link to insert a link to the Terms in this label. For example, the label can be: "I agree with the @link.", without quotes. You may want to link to the Terms if you prefer not to show the full text of the Terms in the registration form. If you use the token, the Terms will not be shown.'),
   );
 
@@ -166,7 +166,7 @@ function terms_of_use_js($form, &$form_state) {
   }
 
   // Rebuild the form.
-  // todo resolve the bug when user click node_id button and then cannot return back t node_title field
+  // @todo: Resolve the bug when user click node_id button and then cannot return back to node_title field.
   $form = form_builder($form_build_id, $form, $form_state);
   form_set_cache($form_build_id, $form, $form_state);
 //  $form += array(

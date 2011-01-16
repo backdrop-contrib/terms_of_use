@@ -63,8 +63,8 @@ msgid "Label for the ckeckbox"
 msgstr "Label Beschriftung für die Checkbox"
 
 #: terms_of_use.module:87;153
-msgid "I agree with these terms."
-msgstr "Ich akzeptiere die Nutzungsbedingungen."
+msgid "I agree with these terms"
+msgstr "Ich akzeptiere die Nutzungsbedingungen"
 
 #: terms_of_use.module:88
 msgid "Type here something like \"I agree with these terms.\" or \"I CERTIFY THAT I AM OVER THE AGE OF 18 YEARS OLD.\", without quotes."
@@ -97,10 +97,6 @@ msgstr "Nutzungsbedingungen der Registrierungsseite hinzufügen."
 #: terms_of_use.module:26
 msgid "Autocomplete node title"
 msgstr "Autovervollständigung des Node Titels"
-
-#: terms_of_use.module:0
-msgid "terms_of_use"
-msgstr "terms_of_use"
 
 #: terms_of_use.info:0
 msgid "Adds terms of Use to the registration page."
