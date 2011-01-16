@@ -24,7 +24,7 @@ function terms_of_use_menu() {
     'file' => 'terms_of_use.admin.inc',
   );
 
-  $items['node/autocomplete'] = array(
+  $items['terms_of_use/autocomplete'] = array(
     'title' => 'Autocomplete node title',
     'page callback' => 'terms_of_use_autocomplete',
     'access arguments' => array('access content'),

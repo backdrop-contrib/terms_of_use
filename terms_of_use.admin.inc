@@ -17,7 +17,6 @@ function terms_of_use_admin_settings() {
     '#type' => 'fieldset',
     '#prefix' => '<div id="fieldset-wrapper">',
     '#suffix' => '</div>',
-    //'#title' => t('Terms of Use text'),
   );
   $form['terms_of_use_text']['terms_of_use_node_title'] = array(
     '#type' => 'textfield',
@@ -30,9 +29,7 @@ function terms_of_use_admin_settings() {
     '#type' => 'button',
     '#value' => t('I prefer to specify the node id'),
     '#weight' => 10,
-//    '#ahah' => array(
     '#ajax' => array(
-//      'path' => 'terms_of_use/js',
       'callback' => 'terms_of_use_js',
       'wrapper' => 'fieldset-wrapper',
     ),
@@ -80,20 +77,18 @@ function terms_of_use_admin_settings_validate($form, &$form_state) {
   }
   elseif (!empty($form_state['values']['terms_of_use_node_title'])) {
     $nid = db_select('node', 'n')
-      ->fields('n', array('nid'))
-      ->condition('n.title', db_like($form_state['values']['terms_of_use_node_title']), 'LIKE')
-      ->condition('n.status', 1)
-      ->range(0, 1)
-      ->addTag('node_access')
-      ->execute()
-      ->fetchField();
-//    $node = node_load(array('title' => $form_state['values']['terms_of_use_node_title']));
-//    if ($node == FALSE) {
+        ->fields('n', array('nid'))
+        ->condition('n.title', db_like($form_state['values']['terms_of_use_node_title']), 'LIKE')
+        ->condition('n.status', 1)
+        ->range(0, 1)
+        ->addTag('node_access')
+        ->execute()
+        ->fetchField();
+
     if (!$nid) {
       form_set_error('terms_of_use_node_title', t('No post was published with this title.'));
     }
     else {
-//      variable_set('terms_of_use_node_id', $node->nid);
       variable_set('terms_of_use_node_id', $nid);
     }
   }
@@ -108,38 +103,28 @@ function terms_of_use_admin_settings_validate($form, &$form_state) {
 function terms_of_use_autocomplete($string = '') {
   $matches = array();
   if ($string != '') {
-//    $result = db_query_range(db_rewrite_sql("SELECT n.title FROM {node} AS n WHERE n.title LIKE '%%%s%%'"), $string, 0, 10);
     $result = db_select('node', 'n')
-      ->fields('n', array('nid', 'title'))
-      ->condition('n.title', '%' . db_like($string) . '%', 'LIKE')
-      ->condition('n.status', 1)
-      ->range(0, 10)
-      ->addTag('node_access')
-      ->execute();
+        ->fields('n', array('nid', 'title'))
+        ->condition('n.title', '%' . db_like($string) . '%', 'LIKE')
+        ->condition('n.status', 1)
+        ->range(0, 10)
+        ->addTag('node_access')
+        ->execute();
 
-
-//    while ($node = db_fetch_object($result)) {
     foreach ($result as $node) {
       $matches[$node->title] = $node->title;
     }
   }
 
-//  drupal_json($matches);
   drupal_json_output($matches);
 }
 
 /**
  * Menu callback for AHAH addition.
  */
-//function terms_of_use_js() {
 function terms_of_use_js($form, &$form_state) {
-//  var_dump($form['terms_of_use_text']);
   // Build the new form.
-//  $form_state = array('submitted' => FALSE);
   $form_build_id = $_POST['form_build_id'];
-
-  // We retreive the cached form, add the element value, and resave.
-//  $form = form_get_cache($form_build_id, $form_state);
 
   if (isset($form['terms_of_use_text']['terms_of_use_node_title'])) {
     // Create the extra field
@@ -169,16 +154,6 @@ function terms_of_use_js($form, &$form_state) {
   // @todo: Resolve the bug when user click node_id button and then cannot return back to node_title field.
   $form = form_builder($form_build_id, $form, $form_state);
   form_set_cache($form_build_id, $form, $form_state);
-//  $form += array(
-//    '#post' => $_POST,
-//    '#programmed' => FALSE,
-//  );
 
-
-
-  // Render the new output.
-//  $output = drupal_render($form['terms_of_use_text']);
-
-//  drupal_json(array('status' => TRUE, 'data' => $output));
   return $form['terms_of_use_text'];
 }

@@ -24,8 +24,8 @@ INSTALLATION
 
 3. Create a Terms of Use page at node/add/page. Do not promote the node.
 
-4. Go to admin/settings/terms_of_use and type the title of your Terms node in
-the autocomplete text field "Title of the post where your Terms of Use are
+4. Go to admin/config/people/terms_of_use and type the title of your Terms node
+in the autocomplete text field "Title of the post where your Terms of Use are
 published".
 
 5. Save your module configuration.
@@ -59,7 +59,7 @@ the output of terms of use by overriding theme_terms_of_use().
 
 
 QUESTION:
-I installed the module, but I am wandering, how to ask already
+I installed the module, but I am wondering, how to ask already
 registered users to check again "Tem of Use" Box, after an update of the Terms
 of Use Node ?
 
