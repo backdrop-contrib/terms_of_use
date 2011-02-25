@@ -1,4 +1,3 @@
-# $Id$
 #
 # German translation of Terms of Use
 # Copyright 2008 Fleshgrinder <admin@nervenhammer.com>

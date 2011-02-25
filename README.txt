@@ -1,4 +1,3 @@
-; $Id$
 Module Terms Of Use
 Author:
 chill35 from http://drupal.org
