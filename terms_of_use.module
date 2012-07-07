@@ -2,15 +2,13 @@
 
 /**
  * @file
- * Adds Terms of Use to the 'user_register' form.
+ * Main module file of the terms of use module.
  *
  * This module adds Terms of Use to the registration page.
  */
 
 /**
- * Implementation of hook_menu().
- *
- * @return array
+ * Implements hook_menu().
  */
 function terms_of_use_menu() {
   $items = array();
@@ -36,11 +34,7 @@ function terms_of_use_menu() {
 }
 
 /**
- * Implementation of hook_form_form_id_alter().
- *
- * @param array $form
- * @param array $form_state
- * @return boolean
+ * Implements hook_form_form_id_alter().
  */
 function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
   // Administrative users can skip this. So admin/user/user/create won't show
@@ -78,20 +72,20 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
     $node = node_load($terms_of_use_node_id);
     // The node could be loaded.
     if ($node->nid) {
-      // Show terms on the registration for or just a links
+      // Show terms on the registration for or just as link.
       if (strpos($checkbox_label, '@link') !== FALSE) {
         $checkbox_label = str_replace('@link', l($node->title, 'node/' . $node->nid), $checkbox_label);
         $show_terms = FALSE;
       }
-      // Adding the nodes body by theme_terms_of_use() to the fieldset if desired.
+      // Adding the nodes body by theme_terms_of_use() to the fieldset if
+      // desired.
       if ($show_terms) {
-        if ($terms = $node->body[$node->language][0]['safe_value']) {
+        if ($items = field_get_items('node', $node, 'body')) {
+          $terms = field_view_value('node', $node, 'body', $items[0]);
           $form['#attached']['css'] = array(
             drupal_get_path('module', 'terms_of_use') . '/terms_of_use.css'
           );
-          $form['terms_of_use']['terms_of_use_text'] = array(
-            '#markup' => theme('terms_of_use', array('terms' => $terms, 'node' => $node)),
-          );
+          $form['terms_of_use']['terms_of_use_text'] = $terms;
         }
         else {
           watchdog('terms_of_use', 'The body field of the terms of use node was empty. Please check the the nodes content.', array(), WATCHDOG_ALERT, l('Administer terms of use', 'admin/config/people/terms_of_use'));
@@ -103,7 +97,7 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
     }
   }
   else {
-    watchdog('terms_of_use', 'No node is set to use as terms of use in the currecnt language [' . $GLOBALS['language']->language . '].', array(), WATCHDOG_NOTICE, l('Administer terms of use', 'admin/config/people/terms_of_use'));
+    watchdog('terms_of_use', 'No node is set to use as terms of use in the current language [@lang].', array('@lang' => $GLOBALS['language']->language), WATCHDOG_NOTICE, l('Administer terms of use', 'admin/config/people/terms_of_use'));
   }
 
   // Adding the checkbox to the fieldset.
@@ -117,7 +111,7 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function terms_of_use_theme() {
   return array(
