@@ -53,8 +53,6 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
     '#weight' => 10,
   );
 
-  $show_terms = TRUE;
-
   // Getting the nid of the the Terms of Use node.
   $terms_of_use_node_id = variable_get('terms_of_use_node_id', 0);
 
@@ -70,37 +68,36 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
   // A nid for the desired language was found.
   if ($terms_of_use_node_id) {
     $node = node_load($terms_of_use_node_id);
-    // The node could be loaded.
+    // If we were able to load the node.
     if ($node->nid) {
-      // Show terms on the registration for or just as link.
+      // If we find @link in the text for the terms checkbox we just show a
+      // link. Otherwise we show the full terms.
       if (strpos($checkbox_label, '@link') !== FALSE) {
         $checkbox_label = str_replace('@link', l($node->title, 'node/' . $node->nid), $checkbox_label);
-        $show_terms = FALSE;
       }
-      // Adding the nodes body by theme_terms_of_use() to the fieldset if
-      // desired.
-      if ($show_terms) {
-        if ($items = field_get_items('node', $node, 'body')) {
-          $terms = field_view_value('node', $node, 'body', $items[0]);
-          $form['#attached']['css'] = array(
-            drupal_get_path('module', 'terms_of_use') . '/terms_of_use.css'
-          );
-          $form['terms_of_use']['terms_of_use_text'] = $terms;
-        }
-        else {
-          watchdog('terms_of_use', 'The body field of the terms of use node was empty. Please check the the nodes content.', array(), WATCHDOG_ALERT, l('Administer terms of use', 'admin/config/people/terms_of_use'));
-        }
+      // If there wasn't a link to the node we add the body field of the node
+      // to the login form.
+      elseif ($items = field_get_items('node', $node, 'body')) {
+        // Limit the height of the body text with css.
+        $form['#attached']['css'] = array(
+          drupal_get_path('module', 'terms_of_use') . '/terms_of_use.css'
+        );
+        $form['terms_of_use']['terms_of_use_text'] = field_view_value('node', $node, 'body', $items[0]);
+        ;
+      }
+      else {
+        watchdog('terms_of_use', 'The body field of the "terms of use" node was empty. Please check the the nodes content.', array(), WATCHDOG_ALERT, l(t('Administer terms of use'), 'admin/config/people/terms_of_use'));
       }
     }
     else {
-      watchdog('terms_of_use', 'The terms of use node could not be loaded. Please check the settings and the node.', array(), WATCHDOG_ALERT, l('Administer terms of use', 'admin/config/people/terms_of_use'));
+      watchdog('terms_of_use', 'The "terms of use" node could not be loaded. Please check the settings and if the node exists.', array(), WATCHDOG_ALERT, l(t('Administer terms of use'), 'admin/config/people/terms_of_use'));
     }
   }
   else {
-    watchdog('terms_of_use', 'No node is set to use as terms of use in the current language [@lang].', array('@lang' => $GLOBALS['language']->language), WATCHDOG_NOTICE, l('Administer terms of use', 'admin/config/people/terms_of_use'));
+    watchdog('terms_of_use', 'No node is set as "terms of use" in the current language [@lang].', array('@lang' => $GLOBALS['language']->language), WATCHDOG_NOTICE, l(t('Administer terms of use'), 'admin/config/people/terms_of_use'));
   }
 
-  // Adding the checkbox to the fieldset.
+// Adding the checkbox to the fieldset.
   $form['terms_of_use']['terms_of_use'] = array(
     '#type' => 'checkbox',
     '#title' => $checkbox_label,
