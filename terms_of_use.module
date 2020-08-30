@@ -94,7 +94,7 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
     watchdog('terms_of_use', 'No node is set as "terms of use" in the current language [@lang].', array('@lang' => $GLOBALS['language']->language), WATCHDOG_NOTICE, l(t('Administer terms of use'), 'admin/config/people/terms_of_use'));
   }
 
-// Adding the checkbox to the fieldset.
+  // Adding the checkbox to the fieldset.
   $form['terms_of_use']['terms_of_use'] = array(
     '#type'     => 'checkbox',
     '#title'    => $checkbox_label,
@@ -117,13 +117,9 @@ function terms_of_use_theme() {
 
 /**
  * Output the terms of service.
- *  The terms of service, already formatted.
- *  The $node object, in case we need it.
- * @param $variables
- * @return string HTML output.
- * @internal param $terms The terms of service, already formatted.
- * @internal param $node The $node object, in case we need it.
- * @ingroup themeable
+ *
+ * The terms of service, already formatted.
+ * The $node object, in case we need it.
  */
 function theme_terms_of_use($variables) {
   $output = '<div id="terms-of-use" class="content clear-block">';
