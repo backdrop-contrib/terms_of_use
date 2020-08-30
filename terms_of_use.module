@@ -51,6 +51,7 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
     '#type'   => 'fieldset',
     '#title'  => $fieldset_name,
     '#weight' => 10,
+    '#id' => 'terms-of-use',
   );
 
   // Getting the nid of the the Terms of Use node.
@@ -79,7 +80,11 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
       // to the login form.
       elseif ($items = field_get_items('node', $node, 'body')) {
         // Limit the height of the body text with css.
-        $form['#attached']['css'][] = drupal_get_path('module', 'terms_of_use') . '/terms_of_use.css';
+        $form['#attached']['css'][] = array(
+          'data' => '#terms-of-use .fieldset-wrapper {height: 250px; overflow: auto;}',
+          'type' => 'inline',
+        );
+
         $form['terms_of_use']['terms_of_use_text']['#markup'] = theme('terms_of_use', array('node' => $node, 'body' => $items[0]));
       }
       else {
