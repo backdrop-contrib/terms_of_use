@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Page callbacks for the Terms of Use module.
@@ -11,44 +10,37 @@
  * @see terms_of_use_admin_settings_validate()
  */
 function terms_of_use_admin_settings() {
+  $config = config('terms_of_use.settings');
+  $form['#config'] = 'terms_of_use.settings';
 
   // Adding the fieldset for node specification.
   $form['terms_of_use_text'] = array(
     '#type' => 'fieldset',
-    '#prefix' => '<div id="fieldset-wrapper">',
-    '#suffix' => '</div>',
+    '#title' => t('Source text'),
   );
   $form['terms_of_use_text']['terms_of_use_node_title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Title of the post where your Terms of Use are published'),
-    '#default_value' => variable_get('terms_of_use_node_title', ''),
-    '#description' => t('Node <em>title</em> of the page or story (or blog entry or book page) where your Terms of Use are published.'),
+    '#title' => t('Title of content where Terms of Use are published'),
+    '#default_value' => $config->get('terms_of_use_node_title'),
     '#autocomplete_path' => 'terms_of_use/autocomplete',
   );
-  $form['terms_of_use_text']['terms_of_use_pick_node_id'] = array(
-    '#type' => 'button',
-    '#value' => t('I prefer to specify the node id'),
-    '#weight' => 10,
-    '#ajax' => array(
-      'callback' => 'terms_of_use_js',
-      'wrapper' => 'fieldset-wrapper',
-    ),
-  );
+
   // Adding the fieldset for form specification.
   $form['terms_of_use_form'] = array(
     '#type' => 'fieldset',
+    '#title' => t('Registration form display settings'),
   );
   $form['terms_of_use_form']['terms_of_use_fieldset_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Label for the fieldset'),
-    '#default_value' => variable_get('terms_of_use_fieldset_name', t('Terms of Use')),
+    '#default_value' => $config->get('terms_of_use_fieldset_name'),
     '#description' => t('The text for the Terms of Use and the [x] checkbox are contained in a fieldset. Type here the title for that fieldset.'),
   );
   $form['terms_of_use_form']['terms_of_use_checkbox_label'] = array(
     '#type' => 'textfield',
     '#title' => t('Label for the checkbox'),
-    '#default_value' => variable_get('terms_of_use_checkbox_label', t('I agree with these terms')),
-    '#description' => t('Type here something like "I agree with these terms." or "I CERTIFY THAT I AM OVER THE AGE OF 18 YEARS OLD.", without quotes. You can use the token @link to insert a link to the Terms in this label. For example, the label can be: "I agree with the @link.", without quotes. You may want to link to the Terms if you prefer not to show the full text of the Terms in the registration form. If you use the token, the Terms will not be shown.'),
+    '#default_value' => $config->get('terms_of_use_checkbox_label'),
+    '#description' => t('The token @link is available to insert a link to the Terms. Examples include: <em>I agree with the @link.</em>, <em>I agree with these terms.</em>, or <em>I CERTIFY THAT I AM OVER THE AGE OF 18 YEARS OLD.</em> '),
   );
 
   return system_settings_form($form);
@@ -116,44 +108,5 @@ function terms_of_use_autocomplete($string = '') {
     }
   }
 
-  drupal_json_output($matches);
-}
-
-/**
- * Menu callback for AHAH addition.
- */
-function terms_of_use_js($form, &$form_state) {
-  // Build the new form.
-  $form_build_id = $_POST['form_build_id'];
-
-  if (isset($form['terms_of_use_text']['terms_of_use_node_title'])) {
-    // Create the extra field.
-    $form['terms_of_use_text']['terms_of_use_node_id'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Node id where your Terms of Use are published'),
-      '#default_value' => variable_get('terms_of_use_node_id', ''),
-      '#description' => t('Node <em>id</em> of the page or story (or blog entry or book page) where your Terms of Use are published.'),
-    );
-    unset($form['terms_of_use_text']['terms_of_use_node_title']);
-    $form['terms_of_use_text']['terms_of_use_pick_node_id']['#value'] = t('I prefer to provide the title of the post');
-  }
-  else {
-    // Create the extra field.
-    $form['terms_of_use_text']['terms_of_use_node_title'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Title of the post where your Terms of Use are published'),
-      '#default_value' => variable_get('terms_of_use_node_title', ''),
-      '#description' => t('Node <em>title</em> of the page or story (or blog entry or book page) where your Terms of Use are published.'),
-      '#autocomplete_path' => 'terms_of_use/autocomplete',
-    );
-    unset($form['terms_of_use_text']['terms_of_use_node_id']);
-    $form['terms_of_use_text']['terms_of_use_pick_node_id']['#value'] = t('I prefer to specify the node id');
-  }
-
-  // Rebuild the form.
-  // @todo: Resolve the bug when user click node_id button and then cannot return back to node_title field.
-  $form = form_builder($form_build_id, $form, $form_state);
-  form_set_cache($form_build_id, $form, $form_state);
-
-  return $form['terms_of_use_text'];
+  backdrop_json_output($matches);
 }

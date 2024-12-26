@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Main module file of the terms of use module.
@@ -8,15 +7,26 @@
  */
 
 /**
+ * Implements hook_config_info().
+ */
+function terms_of_use_config_info() {
+  $prefixes['terms_of_use.settings'] = array(
+    'label' => t('Terms of use'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
  * Implements hook_menu().
  */
 function terms_of_use_menu() {
   $items = array();
 
   $items['admin/config/people/terms_of_use'] = array(
-    'description'      => 'Add Terms of Use to the registration page.',
+    'description'      => 'Add terms of use to the registration page.',
     'title'            => 'Terms of Use',
-    'page callback'    => 'drupal_get_form',
+    'page callback'    => 'backdrop_get_form',
     'page arguments'   => array('terms_of_use_admin_settings'),
     'access arguments' => array('administer site configuration'),
     'file'             => 'terms_of_use.admin.inc',
@@ -37,14 +47,15 @@ function terms_of_use_menu() {
  * Implements hook_form_form_id_alter().
  */
 function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
+  $config = config('terms_of_use.settings');
   // Administrative users can skip this. So admin/user/user/create won't show
   // the terms of use.
   if (user_access('administer users')) {
     return $form;
   }
 
-  $fieldset_name = filter_xss(variable_get('terms_of_use_fieldset_name', t('Terms of Use')));
-  $checkbox_label = filter_xss_admin(variable_get('terms_of_use_checkbox_label', t('I agree with these terms')));
+  $fieldset_name = filter_xss($config->get('terms_of_use_fieldset_name'));
+  $checkbox_label = filter_xss_admin($config->get('terms_of_use_checkbox_label'));
 
   // Adding the fieldset.
   $form['terms_of_use'] = array(
@@ -55,7 +66,7 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
   );
 
   // Getting the nid of the the Terms of Use node.
-  $terms_of_use_node_id = variable_get('terms_of_use_node_id', 0);
+  $terms_of_use_node_id = $config->get('terms_of_use_node_id');
 
   // If the translation module is active the node might be available in other
   // languages.

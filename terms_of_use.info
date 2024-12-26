@@ -1,5 +1,6 @@
-name = Terms of Use
+type = module
+name = Terms of use
 description = Adds terms of Use to the registration page.
-core = 7.x
+backdrop = 1.x
 
 configure = admin/config/people/terms_of_use

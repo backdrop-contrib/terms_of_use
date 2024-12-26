@@ -1,17 +1,31 @@
 <?php
-
 /**
  * @file
- * Terms of Use install file.
+ * Install, Uninstall, and Update functions.
  */
 
 /**
  * Implements hook_uninstall().
  */
 function terms_of_use_uninstall() {
-  // Delete variables.
-  variable_del('terms_of_use_node_title');
-  variable_del('terms_of_use_fieldset_name');
-  variable_del('terms_of_use_checkbox_label');
-  variable_del('terms_of_use_node_id');
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function terms_of_use_update_1000(&$sandbox) {
+  $variables = array(
+    'terms_of_use_node_id' => '',
+    'terms_of_use_node_title' => '',
+    'terms_of_use_fieldset_name' => 'Terms of Use',
+    'terms_of_use_checkbox_label' => 'I agree with these terms',
+  );
+
+  $config = config('terms_of_use.settings');
+  foreach ($variables as $variable => $default_value) {
+    $variable_value = update_variable_get($variable, $default_value);
+    $config->set($variable, $variable_value);
+    variable_del($variable);
+  }
+  $config->save();
 }
