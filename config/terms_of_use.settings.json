@@ -1,0 +1,8 @@
+{
+    "_config_name": "terms_of_use.settings",
+    "_module": "terms_of_use",
+    "terms_of_use_node_id": "",
+    "terms_of_use_node_title": "",
+    "terms_of_use_fieldset_name": "Terms of Use",
+    "terms_of_use_checkbox_label": "I agree with these terms."
+}
