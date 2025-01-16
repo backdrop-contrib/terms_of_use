@@ -59,10 +59,13 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
 
   // Adding the fieldset.
   $form['terms_of_use'] = array(
-    '#type'   => 'fieldset',
-    '#title'  => $fieldset_name,
+    '#type'   => 'details',
+    '#summary'  => $fieldset_name,
     '#weight' => 10,
-    '#id' => 'terms-of-use',
+    '#attributes' => array(
+      'class' => array('terms-of-use'),
+    ),
+    '#open' => TRUE,
   );
 
   // Getting the nid of the the Terms of Use node.
@@ -92,7 +95,7 @@ function terms_of_use_form_user_register_form_alter(&$form, $form_state) {
       elseif ($items = field_get_items('node', $node, 'body')) {
         // Limit the height of the body text with css.
         $form['#attached']['css'][] = array(
-          'data' => '#terms-of-use .fieldset-wrapper {height: 250px; overflow: auto;}',
+          'data' => '.terms-of-use .details-child-wrapper {height: 250px; overflow: auto;}',
           'type' => 'inline',
         );
 
